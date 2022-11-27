@@ -1,11 +1,8 @@
-#Bibliotecas Flask
-from flask import Flask, request, jsonify
-import os
-from werkzeug.utils import secure_filename
-
-#----------------------------------------------------------
+#region LIBRARY
 
 #Bibliotecas base
+from flask import Flask, request, jsonify
+from werkzeug.utils import secure_filename
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -13,9 +10,15 @@ import random
 import time
 import os
 
+# Importing Image module from PIL package
+from PIL import Image
+import PIL
+
 #Transformação
 from keras_preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import RepeatedKFold
+from PIL import Image
+import cv2
 
 #Classificador
 from sklearn.svm import SVC
@@ -25,12 +28,12 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
 from sklearn.metrics import roc_auc_score
 
-#----------------------------------------------------------
+#endregion
 
 app = Flask(__name__)
 
-#--------------- VARIAVEIS GLOBAIS ------------------------
- 
+#region VARIABLE GLOBAL
+
 os.environ['TF_DETERMINISTIC_OPS'] = '1'
 SEED = 1980
 os.environ['PYTHONHASHSEED'] = str(SEED)
@@ -38,7 +41,7 @@ random.seed(SEED)
 tf.random.set_seed(SEED)
 np.random.seed(SEED)
 
-EXTENSAO_PERMITIDA = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+EXTENSAO_PERMITIDA = set(['png', 'jpg', 'jpeg'])
 
 PREDICT_PATH = 'C:/Users/gabri/TCC/predicts'
 DATASET_PATH = "C:/Users/gabri/TCC/via-dataset-master/images"
@@ -54,16 +57,17 @@ kf = RepeatedKFold(n_splits=kfold_n_splits, n_repeats=kfold_n_repeats, random_st
 
 image_size = (224, 224)
 
-nContador = 0
+#endregion
 
-#----------------- FUNÇÕES ------------------------
- 
+#region FUNCTION
+
 def fileValid(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in EXTENSAO_PERMITIDA
  
 def load_data():
     filenames = os.listdir(DATASET_PATH)
     categories = []
+    
     for filename in filenames:
         category = filename.split('.')[0]
         if category == 'clear':
@@ -129,14 +133,14 @@ def create_models_VGG():
 
     from keras.applications.vgg16 import VGG16, preprocess_input 
     global modelVGG16
-    modelVGG16 = VGG16(weights='imagenet', include_top=False, pooling=POOLING, input_shape=image_size + (IMAGE_CHANNELS,))
+    modelVGG16 = VGG16(weights='imagenet', include_top=False, pooling=POOLING, input_shape=(224, 224) + (IMAGE_CHANNELS,))
 
     global preprocessing_function_VGG16
     preprocessing_function_VGG16 = preprocess_input
 
     from keras.applications.vgg19 import VGG19, preprocess_input
     global modelVGG19
-    modelVGG19 = VGG19(weights='imagenet', include_top=False, pooling=POOLING, input_shape=image_size + (IMAGE_CHANNELS,))
+    modelVGG19 = VGG19(weights='imagenet', include_top=False, pooling=POOLING, input_shape=(224, 224) + (IMAGE_CHANNELS,))
 
     global preprocessing_function_VGG19
     preprocessing_function_VGG19 = preprocess_input
@@ -168,7 +172,7 @@ def extract_features(df, model, preprocessing_function):
         x_col='filename',
         y_col='category',
         class_mode='categorical',
-        target_size=image_size,
+        target_size=(224, 224),
         batch_size=batch_size,
         shuffle=False
     )
@@ -180,11 +184,12 @@ def extract_features(df, model, preprocessing_function):
 def classification(ds_features):
     return clf.predict(ds_features) 
 
-
-#----------------- END POINTS ------------------------
+#endregion
+ 
+#region ROUTE
 
 @app.route('/')
-def main():        
+def main():
     df_feature = load_feature()
     df_data = load_data()
 
@@ -227,55 +232,62 @@ def main():
     create_models_VGG()
 
     return "Classificador Treinado"
-
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    if 'files[]' not in request.files:
-        resp = jsonify({'message' : 'Nenhuma parte do arquivo na solicitação'})
+    
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'file' not in request.files:
+        resp = jsonify({'message' : 'Imagem não encontrada na solicitação'})
         resp.status_code = 400
         return resp
  
-    files = request.files.getlist('files[]')
-     
-    errors = {}
-    success = False
-     
-    for file in files:
+    try:
+        file = request.files['file']
+
         if file and fileValid(file.filename):            
             #Guardando a imagem em um dataframe
             df = pd.DataFrame({'filename': file.filename, "category": ["clear"]})
-
+    
             filename = secure_filename(file.filename)
-            file.save(os.path.join(PREDICT_PATH, filename))
+        
+            # criando um objeto da imagem
+            image = Image.open(file)
+            
+            # Girando a imagem 270 graus no sentido anti-horário
+            image = image.rotate(270, PIL.Image.NEAREST, expand=1)
 
+            # Redimensionando a imagem
+            image = image.resize((700, 1000), Image.ANTIALIAS)
+
+            #Salva a imagem
+            image.save(os.path.join(PREDICT_PATH, filename + str(time.time())))
+            
             #Extraindo as caracteristicas da imagem
             features, time_feature_extration = feature_model_extract(df)
 
             result = classification(features)
 
-            if result == 1:
-                sNomeArquivo = "Clear" + str(len(os.listdir(PREDICT_PATH)))
-            else:
-                sNomeArquivo = "NoClear" + str(len(os.listdir(PREDICT_PATH)))
+            #Renomeia o arquivo de acordo com o resultado obtido (SOMENTE PARA VALIDAÇÃO)
+            if 1 == 2:
+                if result == 1:
+                    sNomeArquivo = "Clear" + str(time.time())
+                else:
+                    sNomeArquivo = "NoClear" + str(time.time())
 
-            sNomeAntigo = os.path.join(PREDICT_PATH, filename)
-            sNomeRenomeado = os.path.join(PREDICT_PATH, sNomeArquivo  + "." + filename.rsplit('.', 1)[1].lower())
+                sNomeAntigo = os.path.join(PREDICT_PATH, filename)
+                sNomeRenomeado = os.path.join(PREDICT_PATH, sNomeArquivo  + "." + filename.rsplit('.', 1)[1].lower())
 
-            os.rename(sNomeAntigo, sNomeRenomeado)
+                os.rename(sNomeAntigo, sNomeRenomeado)
 
-            success = True
-        else:
-            errors[file.filename] = 'O tipo de arquivo não é permitido'
+            resp = jsonify({'result' : str(result[0])})
+            resp.status_code = 201
+            return resp
 
-    #Response
-    if success:
-        resp = jsonify({'message' : 'Upload realizado com sucesso!'})
-        resp.status_code = 201
-        return resp
-    else:
-        resp = jsonify(errors)
+    except:
+        resp = jsonify({"result", 0})
         resp.status_code = 500
         return resp
+           
+#endregion
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0',port=5000)
