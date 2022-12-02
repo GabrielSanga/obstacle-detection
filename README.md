@@ -4,4 +4,9 @@ Este projeto propõe a extração de características utilizando redes neurais c
 
 O Aplicativo android possui a função de enviar imagens do caminho a ser trilhado pelo deficiente visual para a API Flask, essa API conta com duas CNNs (VGG16 + VGG19) previamente treinadas pela base de dados do Google (ImageNET), essas CNNs possuem o objetivo de extrair as caracteristicas da imagem recebida, e, com essas caracteristicas, realizar a classificação da imagem, utilizando nosso modelo de aprendizado supervisionado (SVM), também já previamente treinado. O resultado fornecido pelo SVM (0 - caminho com obstáculo | 1 - caminho livre ) será devolvido para o APP Android, que terá a responsábilidade de definir a forma de emitir essa informação para o deficiente vísual.
 
-![image](https://user-images.githubusercontent.com/89952288/205410046-d24cac34-72c9-448b-934e-e28c6438f539.png)
+<p align="center">
+   ![image](https://user-images.githubusercontent.com/89952288/205410046-d24cac34-72c9-448b-934e-e28c6438f539.png)
+</p>
+
+Desenvolvedores: Gabirel Minguini Sanga e João Mauricio Gallego Polo
+Orientador: Jefferson Antônio Ribeiro Passerini
