@@ -8,6 +8,18 @@ O Aplicativo android possui a função de enviar imagens do caminho a ser trilha
 
 ![image](https://user-images.githubusercontent.com/89952288/205410525-66777348-a071-4858-9e85-be4062c3e7fc.png)
 
+Demonstração do APP:
+
+<br>
+Demonstração de uso real:
+Caminho limpo:
+![WhatsApp Image 2022-12-03 at 13 32 30](https://user-images.githubusercontent.com/89952288/205451509-cb888eac-84ee-4a10-8c63-98993e3cc16e.jpeg)
+
+<br>
+Caminho com obstáculo:
+![WhatsApp Image 2022-12-03 at 13 32 12](https://user-images.githubusercontent.com/89952288/205451517-704776f6-2df2-4919-beec-82fc0b4fba1a.jpeg)
+
+<br>
 Desenvolvedores: Gabirel Minguini Sanga e João Mauricio Gallego Polo
 <br>
 Orientador: Jefferson Antônio Ribeiro Passerini
