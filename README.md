@@ -13,11 +13,11 @@ Demonstração do APP:
 <br>
 Demonstração de uso real:
 Caminho limpo:
-![WhatsApp Image 2022-12-03 at 13 32 30](https://user-images.githubusercontent.com/89952288/205451509-cb888eac-84ee-4a10-8c63-98993e3cc16e.jpeg)
+![image](https://user-images.githubusercontent.com/89952288/205451621-4fe6b184-69b1-480c-865d-1799c559cf96.png)
 
 <br>
 Caminho com obstáculo:
-![WhatsApp Image 2022-12-03 at 13 32 12](https://user-images.githubusercontent.com/89952288/205451517-704776f6-2df2-4919-beec-82fc0b4fba1a.jpeg)
+![image](https://user-images.githubusercontent.com/89952288/205451600-b40dd8ff-e8fd-4870-99ef-a5cc8c1bdf3f.png)
 
 <br>
 Desenvolvedores: Gabirel Minguini Sanga e João Mauricio Gallego Polo
