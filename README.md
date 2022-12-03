@@ -1,4 +1,4 @@
-# AUXÍLIO A DEFICIENTES VISUAIS UTILIZANDO REDES NEURAIS CONVOLUCIONAIS E COMPETIÇÃO E COOPERAÇÃO DE PARTÍCULAS
+# AUXÍLIO A DEFICIENTES VISUAIS UTILIZANDO REDES NEURAIS CONVOLUCIONAIS
 
 Este projeto propõe a extração de características utilizando redes neurais convolucionais (VGG16 + VGG19) previamente treinadas por uma base de imagem disponibilizada pelo Google (ImageNET), e a classificação utilizando o modelo de aprendizado supervisionado (SVM), a partir de um conjunto de imagens disponibilizada em tempo real por um aplicativo android que será desenvolvido a fim de capturação das imagens em tempo real.
 
