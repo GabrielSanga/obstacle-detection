@@ -24,6 +24,7 @@ RESULT_PATH = "C:/Users/gabri/TCC/features/features.csv"
 def load_data():
     filenames = os.listdir(DATASET_PATH)
     categories = []
+    
     for filename in filenames:
         category = filename.split('.')[0]
         if category == 'clear':

@@ -264,7 +264,10 @@ def predict():
         file = request.files['file']
 
         if file and fileValid(file.filename):
-            newFilename = str(time.time()) + "." + file.filename.rsplit('.', 1)[1].lower()
+            sTime = str(time.time())
+            sExtensao = file.filename.rsplit('.', 1)[1].lower()
+
+            newFilename = sTime + "." + sExtensao
 
             #Guardando a imagem em um dataframe
             df = pd.DataFrame({'filename': newFilename, "category": ["clear"]})
@@ -289,14 +292,14 @@ def predict():
             result = classification(features)
 
             #Renomeia o arquivo de acordo com o resultado obtido (SOMENTE PARA VALIDAÇÃO)
-            if 1 == 2:
+            if 1 == 1:
                 if result == 1:
-                    sNomeArquivo = "Clear" + str(time.time())
+                    sNomeArquivo = "clear." + sTime
                 else:
-                    sNomeArquivo = "NoClear" + str(time.time())
+                    sNomeArquivo = "noclear." + sTime
 
                 sNomeAntigo = os.path.join(PREDICT_PATH, filename)
-                sNomeRenomeado = os.path.join(PREDICT_PATH, sNomeArquivo  + "." + filename.rsplit('.', 1)[1].lower())
+                sNomeRenomeado = os.path.join(PREDICT_PATH, sNomeArquivo  + "." + sExtensao)
 
                 os.rename(sNomeAntigo, sNomeRenomeado)
 
