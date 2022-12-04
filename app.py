@@ -1,8 +1,10 @@
 #region LIBRARY
 
-#Bibliotecas base
+#Bibliotecas base FLASK
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
+
+#Bibliotecas base Python
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -18,7 +20,6 @@ import PIL
 from keras_preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import RepeatedKFold
 from PIL import Image
-import cv2
 
 #Classificador
 from sklearn.svm import SVC
@@ -27,6 +28,9 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
 from sklearn.metrics import roc_auc_score
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 #endregion
 
@@ -56,6 +60,8 @@ kfold_n_repeats = 1
 kf = RepeatedKFold(n_splits=kfold_n_splits, n_repeats=kfold_n_repeats, random_state=SEED)
 
 image_size = (224, 224)
+
+bGerarInformacoes = True
 
 #endregion
 
@@ -191,6 +197,7 @@ def classification(ds_features):
 @app.route('/')
 def main():
     df_feature = load_feature()
+
     df_data = load_data()
 
     #Carregando Labels
@@ -214,19 +221,32 @@ def main():
     
         hidden_labels = dataset_test_label.copy()
         hidden_pred = pred.copy()
- 
-        #csv detailed data
-        with open(data_filename,"a+") as f_data:
-            f_data.write("VGG16+VGG19,") #CNN
-            f_data.write("LinearSVM,") #Classificador
-            f_data.write(str(index+1)+",") #Kfold index
-            f_data.write(str(np.shape(all_feature)[1])+"," ) #CNN_features
-            f_data.write(str(0)+", ") 
-            f_data.write(str("{0:.4f}".format(accuracy_score(hidden_labels,hidden_pred)))+",") #Acc Score
-            f_data.write(str("{0:.4f}".format(f1_score(hidden_labels,hidden_pred)))+",") #F1 Score
-            f_data.write(str("{0:.4f}".format(roc_auc_score(hidden_labels,hidden_pred)))+",") #ROC Score
-            f_data.write(str("{0:.4f}".format(time_trainning))+",") #Time Classifier Trainning
-            f_data.write(str("{0:.4f}".format(time_prediction))+",\n") #Time Classifier Predict
+    
+        if bGerarInformacoes:
+            #Gerando as informações
+            with open(data_filename,"a+") as f_data:
+                f_data.write("VGG16+VGG19,")
+                f_data.write("LinearSVM,")
+                f_data.write(str(index+1)+",") #Kfold index
+                f_data.write(str(np.shape(all_feature)[1])+"," ) #CNN_features
+                f_data.write(str(0)+", ") 
+                f_data.write(str("{0:.4f}".format(accuracy_score(hidden_labels,hidden_pred)))+",") #Acc Score
+                f_data.write(str("{0:.4f}".format(f1_score(hidden_labels,hidden_pred)))+",") #F1 Score
+                f_data.write(str("{0:.4f}".format(roc_auc_score(hidden_labels,hidden_pred)))+",") #ROC Score
+                f_data.write(str("{0:.4f}".format(time_trainning))+",") #Time Classifier Trainning
+                f_data.write(str("{0:.4f}".format(time_prediction))+",\n") #Time Classifier Predict
+
+            #Gerando a Matrix de Confusão
+            cm = confusion_matrix(hidden_labels, hidden_pred)
+            sns.heatmap(cm, annot=True)
+
+            #Plotando a figura, salvando e limpando
+            plt.plot(cm)
+            plt.savefig(RESULT_PATH + str(index) + ".png", type="png", dpi=100)
+            plt.clf()
+
+            #Gerando o grafico com hiperplano
+            #plt.scatter(X[:, 0], X[:, 1], c=y, s=50, cmap='autumn');
 
     #Criando e Treinando as CNN para extrair as features
     create_models_VGG()
@@ -243,11 +263,13 @@ def predict():
     try:
         file = request.files['file']
 
-        if file and fileValid(file.filename):            
+        if file and fileValid(file.filename):
+            newFilename = str(time.time()) + "." + file.filename.rsplit('.', 1)[1].lower()
+
             #Guardando a imagem em um dataframe
-            df = pd.DataFrame({'filename': file.filename, "category": ["clear"]})
+            df = pd.DataFrame({'filename': newFilename, "category": ["clear"]})
     
-            filename = secure_filename(file.filename)
+            filename = secure_filename(newFilename)
         
             # criando um objeto da imagem
             image = Image.open(file)
@@ -256,10 +278,10 @@ def predict():
             image = image.rotate(270, PIL.Image.NEAREST, expand=1)
 
             # Redimensionando a imagem
-            image = image.resize((700, 1000), Image.ANTIALIAS)
+            image = image.resize((750, 1000), Image.ANTIALIAS)
 
             #Salva a imagem
-            image.save(os.path.join(PREDICT_PATH, filename + str(time.time())))
+            image.save(os.path.join(PREDICT_PATH, filename))
             
             #Extraindo as caracteristicas da imagem
             features, time_feature_extration = feature_model_extract(df)

@@ -1,3 +1,5 @@
+#Esse arquivo é responsável por gerar as features das imagens da base de teste
+
 #base libraries
 import numpy as np
 import pandas as pd
@@ -7,7 +9,7 @@ import time
 import os
 
 #transformation
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from keras_preprocessing.image import ImageDataGenerator
 
 os.environ['TF_DETERMINISTIC_OPS'] = '1'
 SEED = 1980
@@ -17,7 +19,7 @@ tf.random.set_seed(SEED)
 np.random.seed(SEED)
 
 DATASET_PATH = "C:/Users/gabri/TCC/via-dataset-master/images/"
-RESULT_PATH = "C:/Users/gabri/TCC/results/.features.csv"
+RESULT_PATH = "C:/Users/gabri/TCC/features/features.csv"
 
 def load_data():
     filenames = os.listdir(DATASET_PATH)
@@ -64,20 +66,20 @@ def create_model(model_type):
     # load model and preprocessing_function
     if model_type=='VGG16':
         image_size = (224, 224)
-        from tensorflow.keras.applications.vgg16 import VGG16, preprocess_input   
+        from keras.applications.vgg16 import VGG16, preprocess_input   
         model = VGG16(weights='imagenet', include_top=False, pooling=POOLING, input_shape=image_size + (IMAGE_CHANNELS,))
         
     elif model_type=='VGG19':
         image_size = (224, 224)
-        from tensorflow.keras.applications.vgg19 import VGG19, preprocess_input
+        from keras.applications.vgg19 import VGG19, preprocess_input
         model = VGG19(weights='imagenet', include_top=False, pooling=POOLING, input_shape=image_size + (IMAGE_CHANNELS,)) 
         
     else: print("Error: Model not implemented.")
 
     preprocessing_function = preprocess_input
 
-    from tensorflow.keras.layers import Flatten
-    from tensorflow.keras.models import Model
+    from keras.layers import Flatten
+    from keras.models import Model
     
     output = Flatten()(model.layers[-1].output)   
     model = Model(inputs=model.inputs, outputs=output)
