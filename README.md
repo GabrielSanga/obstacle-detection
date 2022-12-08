@@ -12,6 +12,16 @@ O Aplicativo android possui a função de enviar imagens do caminho a ser trilha
 
 ![image](https://user-images.githubusercontent.com/89952288/206480033-77481f15-160c-4f96-acdf-ed67b941c12a.png)
 
+# Resultados:
+
+A partir da análise dos dados preparou-se uma matriz de confusão para demonstrar o resultado, onde os casos verdadeiros são as imagens que possuem obstáculos e falsos determinam são os de caminho livre.
+
+![image](https://user-images.githubusercontent.com/89952288/206586160-0a499d3f-5187-4735-9c14-ce7663fbe02c.png)
+
+Deste modo temos uma acurácia calculada de 75,3% de acertos, e uma especificidade que apura o percentual de acertos de negativos entre os casos negativos de 61,7% e uma sensibilidade que mede a taxa de acertos de casos positivos entre todas as amostras positivas de 94,9%, ou seja, o modelo proposto de acordo com os testes realizados nos demonstra uma melhor detecção em situações que a imagem capturada possui algum obstáculo. Verificando-se a eficiência que é a média entre as taxas de sensibilidade e especificidade temos uma taxa de 78,3%.
+
+Considerando-se os métodos e abordagens utilizadas, percebeu-se que apesar da taxa de acurácia de 75,3% pode-se implementar outras abordagens de algoritmos, sensores e tecnologias para a busca de melhoria na predição desejada.
+
 <br>
 Desenvolvedores: Gabirel Minguini Sanga e João Mauricio Gallego Polo
 <br>
