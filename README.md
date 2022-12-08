@@ -22,7 +22,9 @@ Deste modo temos uma acurácia calculada de 75,3% de acertos, e uma especificida
 
 Considerando-se os métodos e abordagens utilizadas, percebeu-se que apesar da taxa de acurácia de 75,3% pode-se implementar outras abordagens de algoritmos, sensores e tecnologias para a busca de melhoria na predição desejada.
 
-<br>
-Desenvolvedores: Gabirel Minguini Sanga e João Mauricio Gallego Polo
-<br>
-Orientador: Jefferson Antônio Ribeiro Passerini
+<h3>
+   <br>
+   Desenvolvedores: Gabirel Minguini Sanga e João Mauricio Gallego Polo
+   <br>
+   Orientador: Jefferson Antônio Ribeiro Passerini
+</h3>
