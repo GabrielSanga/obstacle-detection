@@ -22,8 +22,15 @@ Deste modo temos uma acurácia calculada de 75,3% de acertos, e uma especificida
 
 Considerando-se os métodos e abordagens utilizadas, percebeu-se que apesar da taxa de acurácia de 75,3% pode-se implementar outras abordagens de algoritmos, sensores e tecnologias para a busca de melhoria na predição desejada.
 
+
+# Apresentação real do framework no link abaixo:
+
+<h4> https://drive.google.com/file/d/11qgC0HvdhYcr_C9lphLcWY6ejydj-_5O/view </h4>
+
+
+# Participantes:
+
 <h3>
-   <br>
    Desenvolvedores: Gabirel Minguini Sanga e João Mauricio Gallego Polo
    <br>
    Orientador: Jefferson Antônio Ribeiro Passerini
