@@ -1,0 +1,1 @@
+* Essas são as imagens utilizadas para treinar o classificador SVM
