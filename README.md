@@ -27,6 +27,9 @@ Considerando-se os métodos e abordagens utilizadas, percebeu-se que apesar da t
 
 <h4> https://drive.google.com/file/d/11qgC0HvdhYcr_C9lphLcWY6ejydj-_5O/view </h4>
 
+#  Documentação  do  projeto no link abaixo:
+
+[Qualificacao_Iniciacao.pdf](https://github.com/FolkGallego/obstacle-detection/files/10218946/Qualificacao_Iniciacao.pdf)
 
 # Participantes:
 
